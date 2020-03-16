@@ -1,0 +1,3 @@
+4 singletons 
+18 lines 
+6 polygons
