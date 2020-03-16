@@ -361,7 +361,7 @@ def find_poly_graphs(n, pt=-1):
 
 
 def main():
-    find_poly_graphs(4)
+    find_poly_graphs(5)
 
 
 if __name__ == '__main__':
