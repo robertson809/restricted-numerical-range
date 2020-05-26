@@ -21,15 +21,7 @@ title = ""
 verbose = False
 
 
-def plt_nr(a):
-    """
-    Plots the numerical range using matplotlib
-    @param a: square matrix
-    """
-    f, e = nr(a)
-    plt.plot(np.real(f), np.imag(f))
-    plt.plot(np.real(e), np.imag(e), 'r*')
-    plt.show()
+
 
 
 def convex_hull(points):
@@ -117,7 +109,8 @@ def nr(mat):
     for k in range(1, num_values + 1):
         z = np.exp(2 * pi * 1j * (k - 1) / num_values) # roots of unity
         a1 = z * mat
-        a2 = (a1 + np.transpose(np.conjugate(a1))) / 2 # A_2 is Hermitian part, and the NR of A_2 is the Real part of NR(A)
+        a2 = (a1 + np.transpose(np.conjugate(a1))) / 2 # A_2 is Hermitian part, and the NR of
+        # A_2 is the Real part of NR(A)
         w, v = np.linalg.eig(a2)
         ind = np.argsort(w)
         w = w[ind]
@@ -156,6 +149,7 @@ def qnr(lap):
     # restrict lap to form a
     a = np.dot(np.transpose(q), np.dot(lap, q))
 
+
     # plot Q matrix, we decided not to do this
     # plt.subplot(224)
     # plt.matshow(a, fignum=False, cmap='winter')
@@ -169,30 +163,6 @@ def qnr(lap):
             sys.float_info.epsilon * 100:
         title = title + ' N_Q '
     return nr(a)
-
-
-def restricted_nr(lap):
-    """
-    Plots both the restricted and unrestricted numerical ranges
-    @param lap: lapalcian matrix
-    @return: the numerical range eigenvalue pair for the restricted
-    and unrestricted numerical ranges
-    """
-    nr_restricted, e_restricted = qnr(lap)
-    nr_unrestricted, e_unrestricted = nr(lap)
-
-    # restricted numerical range
-    plt.subplot(223)
-    plt.title('NR(Q)')
-    plt.plot(np.real(nr_restricted), np.imag(nr_restricted))
-    plt.plot(np.real(e_restricted), np.imag(e_restricted), 'g*')
-
-    # unrestricted numerical range
-    plt.subplot(224)
-    plt.title('NR(L)')
-    plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
-    plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
-    return nr_restricted, e_restricted
 
 
 def is_singleton(f):
@@ -231,17 +201,45 @@ def is_polygon(f, e):
     return res
 
 
-def determine_polygon(adj, count_vect, singleton_adj, line_adj, poly_adj, pt):
+def restricted_nr(lap):
+    """
+    Plots both the restricted and unrestricted numerical ranges
+    @param lap: lapalcian matrix
+    @return: the numerical range eigenvalue pair for the restricted
+    and unrestricted numerical ranges
+    """
+    nr_restricted, e_restricted = qnr(lap)
+    nr_unrestricted, e_unrestricted = nr(lap)
+
+    # restricted numerical range
+    # plt.subplot(223)
+    # plt.title('NR(Q)')
+    plt.plot(np.real(nr_restricted), np.imag(nr_restricted),'#03a5e0', linewidth=2.5)
+    plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
+             linestyle='None', marker='*', color='#0337e0', markersize = 8)
+    plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
+
+
+    # unrestricted numerical range
+    # plt.subplot(224)
+    # plt.title('NR(L)')
+    # plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
+    # plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
+    return nr_restricted, e_restricted
+
+
+def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], poly_adj=[], pt=-1, disp=False):
     """
     Determines whether an an adjacency matrix has a singleton, line, or polygon numerical range, and saves
     four-part figures which include a visualization of the graph, the Lapalcian matrix, and the restricted
     and unrestricted numerical ranges.
     @param adj: adjacency matrix
-    @param count_vect: counts the number of singletons, lines and polygons
+    @param count_vect: three vector with a position to count the singletons, lines and polygons
     @param singleton_adj: list of adjacency matrices with singleton numerical ranges
     @param line_adj: list of adjacency matrices with line numerical ranges
     @param poly_adj: list of adjacency matrices with polygonal numerical range
     @param pt: used to allow for parallel computing with six or more vertices
+    @param disp: if true, displays the figure and exits rather than saving it
     """
     global graph_num
     global title
@@ -250,50 +248,60 @@ def determine_polygon(adj, count_vect, singleton_adj, line_adj, poly_adj, pt):
     n = len(adj)
 
     # include graph in figure
-    nx.draw_shell(g, with_labels=True, ax=plt.subplot(221))
+    # nx.draw_shell(g, with_labels=True, ax=plt.subplot(221))
 
     # form Laplacian
     diag = np.array([np.sum(adj[i, :]) for i in range(n)])
     lap = np.diag(diag) - adj
+    if not disp:
+        print(lap)
+        print(graph_num)
 
     # test for normality
-    if np.linalg.norm(lap.transpose() @ lap - lap @ lap.transpose(), 'fro') == 0:  # normality test
-        title = title + ' N_L '
-    plt.subplot(221)
+    # if np.linalg.norm(lap.transpose() @ lap - lap @ lap.transpose(), 'fro') == 0:  # normality test
+    #     title = title + ' N_L '
+    # plt.subplot(221)
 
     # include graph number in figure
     if pt != -1:
         plt.title(title + "Graph Number %d.%d" % (pt, graph_num))
-    else:
-        plt.title(title + "Graph Number %d" % graph_num)
-    plt.subplot(222)
+    if disp:
+        print('could include a title in line 267')
+        # plt.title()
+    # else:
+    #     plt.title(title + "Graph Number %d" % graph_num)
+
+    # plt.subplot(222)
 
     # include Laplacian in figure
-    plt.matshow(lap, fignum=False, cmap='winter')
-    for k in range(n):
-        for j in range(n):
-            c = lap[j, k]
-            plt.text(k, j, str(c), va='center', ha='center', color='white')
+    # plt.matshow(lap, fignum=False, cmap='winter')
+    # for k in range(n):
+    #     for j in range(n):
+    #         c = lap[j, k]
+            # plt.text(k, j, str(c), va='center', ha='center', color='white')
 
     # find unrestricted numerical ranges and include both restricted and unrestricted in figure
     nr_restricted, eig_restricted = restricted_nr(lap)
     fig = plt.gcf()
 
+    if disp:
+        plt.show()
+        exit()
     # in figure nad save figure
     if is_singleton(nr_restricted):
-        fig.savefig("figures/%d_all/singletonGraph%d/singletonGraph%d.png" % (n, n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/d_singletonGraph%d/singletonGraph%d.png" % (n, n, graph_num), dpi=400)
         count_vect[0] += 1
         singleton_adj.append(lap)
     elif is_line(nr_restricted):
-        fig.savefig("figures/%d_all/lineGraph%d/lineGraph%d.png" % (n, n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/d_lineGraph%d/lineGraph%d.png" % (n, n, graph_num), dpi=400)
         count_vect[1] += 1
         line_adj.append(lap)
     elif is_polygon(nr_restricted, eig_restricted):
         count_vect[2] += 1
         poly_adj.append(lap)
-        fig.savefig("figures/%d_all/polyGraph%d/polyGraph%d.png" % (n, n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/d_polyGraph%d/polyGraph%d.png" % (n, n, graph_num), dpi=400)
     else:
-        fig.savefig("figures/%d_all/other/graph%d.png" % (n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/d_other/graph%d.png" % (n, graph_num), dpi=400)
 
     plt.clf()
     graph_num = graph_num + 1
@@ -307,7 +315,8 @@ def write_out(adjs, n):
     """
     names = ['singleton', 'line', 'polygon']
     for name, mat in zip(names, adjs):
-        outfile = open('matrices/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
+        # outfile = open('matrices/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
+        outfile = open('defense_figs/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
         for g in mat:
             for i in range(n):
                 for j in range(n - 1):
@@ -331,6 +340,8 @@ def find_poly_graphs(n, pt=-1):
         infile = open('matrices/directed_adjacency_mats/adj' + str(n) + '_pt' + str(pt) + '.txt')
     else:
         infile = open('matrices/directed_adjacency_mats/adj' + str(n) + '.txt')
+    # infile = open('matrices/directed_adjacency_mats/4complete.txt')
+
 
     line_list = infile.readlines()
     a = np.zeros((n, n))
@@ -339,6 +350,7 @@ def find_poly_graphs(n, pt=-1):
     singleton_adj = []
     line_adj = []
     poly_adj = []
+    # print(line_list)
     for row in line_list:
         if graph_num % 1000 == 0:
             print('Examined graph {}.{}'.format(pt, graph_num))
@@ -347,6 +359,7 @@ def find_poly_graphs(n, pt=-1):
             print('Total time elapsed ---- %.1f hours' % ((time.time() - start_time) / 3600))
         row = row.split(" ")
         if len(row) < n:  # we've read a full adjacency matrix
+            print(a)
             determine_polygon(a, count_vect, singleton_adj, line_adj, poly_adj, pt)
             a = np.zeros((n, n))  # reset adjacency matrix
             mat_line_count = 0  # reset line count
@@ -360,9 +373,167 @@ def find_poly_graphs(n, pt=-1):
     report_file.write('%d singletons \n%d lines \n%d polygons' % (count_vect[0], count_vect[1], count_vect[2]))
 
 
+def plt_nr(a, restricted = True):
+    """
+    Plots the numerical range using matplotlib
+    @param a: square matrix
+    """
+    if restricted:
+        f, e = qnr(a)  # make it q instead
+        print('the eigenvalues are', e)
+    else:
+        f, e = nr(a)
+
+    # color options
+    # print('the eigen values are', e)
+    # close blue #0337e0
+    # 03a5e0 - 'calming blue
+    # outside green - #8da63a
+    # 03e0ad
+    # contrast orange - #e03e03
+    # ac1a2f davidson wildcat red
+    # plt.plot(np.real(f), np.imag(f),'#03a5e0', linewidth = 2.5) #boundary
+    # plt.plot(np.real(e), np.imag(e), linestyle = 'None', marker =  '*',
+    #          color = '#0337e0', markersize=8) #evals
+    # plt.fill(np.real(f), np.imag(f), '#03a5e0') #fill
+    #
+    # plt.show()
+    # print(a)
+
+    # plt.plot(np.real(f), np.imag(f), '#03a5e0', linewidth=2.5)  # boundary
+    plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize=8)
+    plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize = 8)  # evals
+    plt.fill(np.real(f), np.imag(f), '#03a5e0')# fill
+
+    plt.xlim(-1, 4)
+    plt.ylim(-2, 2)
+    plt.gca().set_aspect('equal', adjustable='box')
+
+
+    plt.show()
 def main():
     find_poly_graphs(5)
 
 
 if __name__ == '__main__':
-    main()
+    y = np.array([[3,1,4],[1,5,9],[2,6,5]])
+    x = np.array([[ 5.+10.j ,72.+58.j, 37.+52.j],
+                [84. +3.j, 19.+61.j, 98.+77.j],
+                [55.+53.j, 52.+40.j, 65.+46.j]])
+
+    z = np.array([[64+42j  ,  10+62j  ,  40+25j    ],
+           [ 51+33j  ,  77+57j  ,  53+64j   ],
+            [78+10j  ,  29+56j  ,  30+49j  ]])
+    zh = np.array([[64-42j , 51-33j, 78-10j    ],
+[10-62j, 77-57j ,29-56j    ],
+[ 40-25j ,53-64j, 30-49j  ]])
+    a =  np.array([[171.+253.j, 90.+210.j, 266. +65.j, 264. +55.j],
+    [242.+225j, 116.+267.j,  85.+224.j, 108. +59.j],
+    [162.+171.j, 196.+106.j, 125.+171.j, 100. +78.j],
+    [7.+149.j,  13. +35.j, 241.+121.j, 253.+255.j]])
+    J = np.array([[8,6,7],[5,3,0],[9,0,1]])
+    a = np.array([[1,0,0,-1,0,0],[0,1,0,0,-1,0],[0,0,0,0,0,0],
+                  [0,0,0,1,0,-1],[-1,0,0,0,1,0],[0,-1,0,0,0,1]])
+    # print(np.transpose(a))
+    # print(np.transpose(a) @ a, 'product')
+    a = np.array([[ 56. +86.j, 138.+250.j, 256. +45.j],
+                [162. +59.j, 212.+140.j, 146.+119.j],
+                [95. +27.j ,  8.+189.j, 238.+226.j]])
+    astar = np.array([[ 56. -86.j ,162. -59.j, 95. -27.j],
+            [138.-250.j, 212.-140.j, 8.-189.j],
+            [256. -45.j, 146.-119.j, 238.-226.j]])
+    normal = np.array([[1, -1, 0, 0, 0,0],[0,1,-1,0,0,0],[0,0,1,-1,0,0],[0,0,0,1,-1,0],[0,0,0,0,1,-1],[-1,0,0,0,0,1]])
+    z = np.array([[2, 2 + 1j, 4],
+            [2 - 1j,  3, 1j],
+            [4, - 1j, 1]])
+    IS_32 = np.array([[1, -1, -1], [0, 1, -1], [0, -1, 1]])
+
+    s61 = np.array([[1,0,0,0,0,-1],[0,1,0,0,0,-1],[0,0,1,0,0,-1],[0,0,0,1,0,-1],
+                    [0,0,0,0,1,-1],[0,0,0,0,0,0]])
+    s62 = np.array([[2,0,0,0,-1,-1],[0,2,0,0,-1,-1],[0,0,2,0,-1,-1],
+                    [0,0,0,2,-1,-1],[0,0,0,0,1,-1],[0,0,0,0,-1,1]])
+    six_star = np.array([[0,0,0,1,1,1],[0,0,0,1,1,1],[0,0,0,1,1,1],[0,0,0,0,1,1],
+                         [0,0,0,1,0,1],[0,0,0,1,1,0]])
+    six_star_deg = np.array([[0,0,1,0,1,1],[0,0,0,1,1,1],[0,0,0,1,1,1],[0,0,0,0,1,1],
+                         [0,0,0,1,0,1],[0,0,0,1,1,0]])
+    cam_ex = np.array([[0,1,0,1],[0,0,1,1],[1,0,0,1],[0,0,0,0]])
+    empty = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
+    complete = np.array([[0,1,1,1],[1,0,1,1],[1,1,0,1],[1,1,1,0]])
+    four_cycle = np.array([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]])
+    reg_torn = np.array([[0,1,1,0,0],[0,0,1,1,0],[0,0,0,1,1],[1,0,0,0,1],[1,1,0,0,0]])
+    cam_ex = np.array(
+        [[2, -1, 0, 0, -1, 0], [0, 1, -1, 0, 0, 0], [-1, 0, 1, 0, 0, 0], [-1, 0, 0, 1, 0, 0], [0, 0, 0, -1, 2, -1],
+         [0, 0, 0, 0, -1, 1]], dtype=float)
+
+    # print(a)
+    # print(' is it zero',np.tran spose(cam_ex) @ cam_ex -
+    #       cam_ex @ np.transpose(cam_ex))
+
+    # determine_polygon(four_cycle, disp=True)
+    # determine_polygon(x, disp=True)
+    # determine_polygon(reg_torn, disp=True)
+
+    empty_4 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
+    complete_2 = np.array([[1,-1],[-1,1]])
+    complete_3 = np.array([[2,-1,-1],[-1,2,-1],[-1,-1,2]])
+    complete_4 = np.array([[3,-1, -1, -1], [-1, 3,-1, -1], [-1, -1, 3,-1],[-1,-1,-1,3]])
+    four_cycle = np.array([[1, -1, 0, 0], [0, 1, -1, 0], [0, 0, 1, -1], [-1, 0, 0, 1]])
+    five_cycle = np.array([[1, -1, 0, 0, 0], [0, 1, -1, 0, 0], [0, 0, 1, -1, 0],
+                          [0, 0, 0, 1, -1], [-1, 0, 0, 0, 1]])
+    six_cycle = np.array([[1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0], [0, 0, 1, -1, 0, 0],
+                          [0, 0, 0, 1, -1, 0], [0, 0, 0, 0, 1, -1], [-1, 0, 0, 0, 0, 1]])
+    s61 = np.array([[1, 0, 0, 0, 0, -1], [0, 1, 0, 0, 0, -1], [0, 0, 1, 0, 0, -1], [0, 0, 0, 1, 0, -1],
+                    [0, 0, 0, 0, 1, -1], [0, 0, 0, 0, 0, 0]])
+    s62 = np.array([[2, 0, 0, 0, -1, -1], [0, 2, 0, 0, -1, -1], [0, 0, 2, 0, -1, -1],
+                    [0, 0, 0, 2, -1, -1], [0, 0, 0, 0, 1, -1], [0, 0, 0, 0, -1, 1]])
+    s63 = np.array([[3, 0, 0, -1, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1],
+                    [0, 0, 0, 2, -1, -1], [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
+    reg_torn_5 = np.array([[2, -1, -1, 0, 0], [0, 2, -1, -1, 0], [0, 0, 2, -1, -1],
+                         [-1, 0, 0, 2, -1], [-1, -1, 0, 0, 2]])
+    reg_torn_7 = np.array([[3, -1, -1, -1, 0,0,0], [0, 3, -1, -1, -1,0,0], [0, 0, 3, -1, -1,-1,0],
+                           [0, 0, 0, 3, -1,-1,-1], [-1, 0, 0, 0, 3,-1,-1],[-1,-1,0,0,0,3,-1],
+                           [-1,-1,-1,0,0,0,3]])
+    reg_torn_9 = np.array([[4, -1, -1, -1,-1,0,0,0, 0], [0, 4, -1, -1, -1, -1,0,0,0],
+                           [0, 0, 4, -1, -1,-1,-1,0,0],
+                           [0, 0, 0, 4, -1,-1,-1,-1,0], [0, 0, 0, 0, 4,-1,-1,-1,-1],
+                           [-1,0,0,0,0,4,-1,-1,-1],[-1,-1,0,0,0,0,4,-1,-1],[-1,-1,-1,0,0,0,0,4,-1],
+                           [-1,-1,-1, -1,0,0,0,0,4]])
+    three_balanced_4 = np.array([[2,0,-1,-1],[0,2,-1,-1],[0,0,0,0],
+                                 [0,0,0,0]])
+    three_balanced_5 = np.array([[1,-1,0,0,0],[-1,2,-1,0,0],[0,-1,1,0,0],
+                                 [-1,-1,-1,3,0],[-1,-1,-1,0,3]])
+
+    case_1 = np.array([[2,0,0,-1,0,-1],[0,1,0,0,0,-1],[0,0,1,0,0,-1],[0,0,0,2,-1,-1],
+                      [-1,0,0,0,2,-1],[-1,-1,-1,-1,-1,5]])
+    case_2 = np.array([[1,0,0,-1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,1,-1,0],
+                       [-1,0,0,0,1,0],[-1,-1,-1,-1,-1,5]])
+
+    case_3 = np.array([[2,0,-1,-1,0,0],[0,2,-1,-1,0,0],[-1,-1,4,-1,-1,0],
+                       [-1,-1,-1,4,0,-1],[-1,-1,0,-1,4,-1],[-1,-1,-1,0,-1,4]])
+
+    case_3_comp = np.array([[3, -1, 0, 0, -1, -1], [-1, 3, 0, 0, -1, -1], [0, 0, 1, 0, 0, -1],
+                       [0, 0, 0, 1, -1, 0], [0, 0, -1, 0, 1, 0], [0, 0, 0, -1, 0, 1]])
+
+
+    six_star = np.array([[3, 0, 0, -1, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1], [0, 0, 0, 2, -1, -1],
+                         [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
+    six_star_deg = np.array([[3, 0, -1, 0, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1], [0, 0, 0, 2, -1, -1],
+                             [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
+    # plt_nr(complete_2)
+    # plt_nr(com
+    # plete_3)
+    # plt_nr(complete_4, restricted=False)
+    # plt_nr(complete_4)
+    # plt_nr(case_3)
+    # plt_nr(case_3_comp)
+    plt_nr(six_star, restricted=False)
+    plt_nr(six_star_deg, restricted=False)
+    # plt.show()
+    # plt_nr(case_2)
+    # plt_nr(case_3)
+
+
+    # plt_nr(np.transpose(x))
+    # plt_nr(astar)
+    # find_poly_graphs(4)
+# main()
