@@ -373,16 +373,16 @@ def find_poly_graphs(n, pt=-1):
     report_file.write('%d singletons \n%d lines \n%d polygons' % (count_vect[0], count_vect[1], count_vect[2]))
 
 
-def plt_nr(a, restricted = True):
+def plt_nr(l, restricted = True, save_num = 0):
     """
-    Plots the numerical range using matplotlib
+    Plots the numerical range of a laplacian using matplotlib
     @param a: square matrix
     """
     if restricted:
-        f, e = qnr(a)  # make it q instead
-        print('the eigenvalues are', e)
+        f, e = qnr(l)  # make it q instead
+        # print('the eigenvalues are', e)
     else:
-        f, e = nr(a)
+        f, e = nr(l)
 
     # color options
     # print('the eigen values are', e)
@@ -405,12 +405,21 @@ def plt_nr(a, restricted = True):
     plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize = 8)  # evals
     plt.fill(np.real(f), np.imag(f), '#03a5e0')# fill
 
-    plt.xlim(-1, 4)
-    plt.ylim(-2, 2)
-    plt.gca().set_aspect('equal', adjustable='box')
+    # plt.xlim(-1, 4)
+    # plt.ylim(-2, 2)
+    # plt.gca().set_aspect('equal', adjustable='box')
+
+    # either save or
+    fig = plt.gcf()
+    fig.savefig("nice_poly_nr_figs/polyGraph%d.png" % save_num, dpi=400)
+    plt.clf()
+
+    # display
+    # plt.show()
 
 
-    plt.show()
+
+
 def main():
     find_poly_graphs(5)
 
@@ -526,8 +535,8 @@ if __name__ == '__main__':
     # plt_nr(complete_4)
     # plt_nr(case_3)
     # plt_nr(case_3_comp)
-    plt_nr(six_star, restricted=False)
-    plt_nr(six_star_deg, restricted=False)
+    # plt_nr(six_star, restricted=False)
+    # plt_nr(six_star_deg, restricted=False)
     # plt.show()
     # plt_nr(case_2)
     # plt_nr(case_3)
@@ -536,4 +545,5 @@ if __name__ == '__main__':
     # plt_nr(np.transpose(x))
     # plt_nr(astar)
     # find_poly_graphs(4)
+
 # main()

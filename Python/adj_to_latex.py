@@ -54,7 +54,7 @@ header = """\\captionsetup[figure]{font=footnotesize,labelfont=footnotesize}
 """
 
 body ="""
-\\resizebox{0.1\\textwidth}{!}{
+\\resizebox{0.12\\textwidth}{!}{
 \\begin{tikzpicture}
 	\\node[circle,draw=black,fill=black!20] (1) at (2,0) {\\textbf{1}};
 	\\node[circle,draw=black,fill=black!20] (2) at (1,1.732) {\\textbf{2}};
@@ -67,9 +67,9 @@ body ="""
 \\end{tikzpicture}
 } 
 & 
- \\includegraphics[width=0.1\\linewidth]{appendix_polygraphs/polyGraph%s.png}
+ \\includegraphics[width=0.15\\linewidth]{appendix_polygraphs/polyGraph%s.png}
 &
-\\resizebox{.1\\textwidth}{!}{
+\\resizebox{.12\\textwidth}{!}{
 \\begin{tikzpicture}
 	\\node[circle,draw=black,fill=black!20] (1) at (2,0) {\\textbf{1}};
 	\\node[circle,draw=black,fill=black!20] (2) at (1,1.732) {\\textbf{2}};
@@ -82,9 +82,9 @@ body ="""
 \\end{tikzpicture}
 } 
 & 
- \\includegraphics[width=0.1\\linewidth]{appendix_polygraphs/polyGraph%s.png}
+ \\includegraphics[width=0.15\\linewidth]{appendix_polygraphs/polyGraph%s.png}
 &
-\\resizebox{.1\\textwidth}{!}{
+\\resizebox{.12\\textwidth}{!}{
 \\begin{tikzpicture}
 	\\node[circle,draw=black,fill=black!20] (1) at (2,0) {\\textbf{1}};
 	\\node[circle,draw=black,fill=black!20] (2) at (1,1.732) {\\textbf{2}};
@@ -97,7 +97,7 @@ body ="""
 \\end{tikzpicture}
 } 
 & 
- \\includegraphics[width=0.1\\linewidth]{appendix_polygraphs/polyGraph%s.png}\\\\ 
+ \\includegraphics[width=0.15\\linewidth]{appendix_polygraphs/polyGraph%s.png}\\\\ 
  
 \\scriptsize{$G_{%s}$}  & \\scriptsize{$W_r(L(G_{%s}))$}&\\scriptsize{$G_{%s}$}  
 & \\scriptsize{$W_r(L(G_{%s}))$} &\\scriptsize{$G_{%s}$}  & \\scriptsize{$W_r(L(G_{%s}))$} \\\\[6pt]
@@ -113,7 +113,17 @@ footer =  """\\end{tabular}
 
 outfile = open('latex_outfile.txt', 'w+')
 graph_count = 0
-for j in range(4):
+outfile.write('hello')
+outfile.write(header)
+for i in range(7):
+    outfile.write(body % (for_each_str_list[graph_count], graph_count +1, for_each_str_list[graph_count+1],
+                          graph_count+2, for_each_str_list[graph_count+2], graph_count+3,
+                          graph_count + 1, graph_count + 1, graph_count + 2,
+                          graph_count + 2, graph_count + 3, graph_count + 3
+                          ))
+    graph_count += 3
+outfile.write(footer)
+for j in range(3):
     outfile.write(header)
     for i in range(8):
         outfile.write(body % (for_each_str_list[graph_count], graph_count +1, for_each_str_list[graph_count+1],
@@ -125,11 +135,11 @@ for j in range(4):
     outfile.write(footer)
 #remainder
 outfile.write(header)
-for i in range(5):
+for i in range(6):
     outfile.write(body % (for_each_str_list[graph_count], graph_count + 1, for_each_str_list[graph_count+1],
                               graph_count+2, for_each_str_list[graph_count+2], graph_count + 3,
-                          graph_count + 1, graph_count+2, graph_count + 3,
-                          graph_count + 1, graph_count+2, graph_count + 3))
+                          graph_count + 1, graph_count + 1, graph_count + 2,
+                          graph_count + 2, graph_count + 3, graph_count + 3))
     graph_count += 3
 print("final graph count is", graph_count)
 outfile.write(footer)
