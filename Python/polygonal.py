@@ -342,13 +342,9 @@ def main(argv):
     n = int(argv[0])
     pt = int(argv[1])
     polyGraphs(n,pt)
-    # except:
-    #     print("provide size and part as command line arguments")
-    #a = np.array([[5,-1,-1,-1,-1,-1],[-1,5,-1,-1,-1,-1],[-1,-1,5,-1,-1,-1],[-1,-1,-1,5,-1,-1],[-1,-1,-1,-1,5,-1],[-1,-1,-1,-1,-1,5]],dtype=float)
-    #plt.plot(np.real(eig_hull),np.imag(eig_hull),'g')
-    #f, e = qnr(a)
-    #print(isPolygon(f,e))
+
+
     
 if __name__ == '__main__':
-    main([6,-1])
+    main([4,-1])
     # main(sys.argv[1:])

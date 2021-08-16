@@ -212,19 +212,19 @@ def restricted_nr(lap):
     nr_unrestricted, e_unrestricted = nr(lap)
 
     # restricted numerical range
-    # plt.subplot(223)
-    # plt.title('NR(Q)')
+    plt.subplot(121)
+    plt.title('NR(Q)')
     plt.plot(np.real(nr_restricted), np.imag(nr_restricted),'#03a5e0', linewidth=2.5)
     plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
              linestyle='None', marker='*', color='#0337e0', markersize = 8)
     plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
 
-
     # unrestricted numerical range
-    # plt.subplot(224)
-    # plt.title('NR(L)')
-    # plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
-    # plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
+    plt.subplot(122)
+    plt.title('NR(L)')
+    plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
+    plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
+    plt.show()
     return nr_restricted, e_restricted
 
 
@@ -425,38 +425,6 @@ def main():
 
 
 if __name__ == '__main__':
-    y = np.array([[3,1,4],[1,5,9],[2,6,5]])
-    x = np.array([[ 5.+10.j ,72.+58.j, 37.+52.j],
-                [84. +3.j, 19.+61.j, 98.+77.j],
-                [55.+53.j, 52.+40.j, 65.+46.j]])
-
-    z = np.array([[64+42j  ,  10+62j  ,  40+25j    ],
-           [ 51+33j  ,  77+57j  ,  53+64j   ],
-            [78+10j  ,  29+56j  ,  30+49j  ]])
-    zh = np.array([[64-42j , 51-33j, 78-10j    ],
-[10-62j, 77-57j ,29-56j    ],
-[ 40-25j ,53-64j, 30-49j  ]])
-    a =  np.array([[171.+253.j, 90.+210.j, 266. +65.j, 264. +55.j],
-    [242.+225j, 116.+267.j,  85.+224.j, 108. +59.j],
-    [162.+171.j, 196.+106.j, 125.+171.j, 100. +78.j],
-    [7.+149.j,  13. +35.j, 241.+121.j, 253.+255.j]])
-    J = np.array([[8,6,7],[5,3,0],[9,0,1]])
-    a = np.array([[1,0,0,-1,0,0],[0,1,0,0,-1,0],[0,0,0,0,0,0],
-                  [0,0,0,1,0,-1],[-1,0,0,0,1,0],[0,-1,0,0,0,1]])
-    # print(np.transpose(a))
-    # print(np.transpose(a) @ a, 'product')
-    a = np.array([[ 56. +86.j, 138.+250.j, 256. +45.j],
-                [162. +59.j, 212.+140.j, 146.+119.j],
-                [95. +27.j ,  8.+189.j, 238.+226.j]])
-    astar = np.array([[ 56. -86.j ,162. -59.j, 95. -27.j],
-            [138.-250.j, 212.-140.j, 8.-189.j],
-            [256. -45.j, 146.-119.j, 238.-226.j]])
-    normal = np.array([[1, -1, 0, 0, 0,0],[0,1,-1,0,0,0],[0,0,1,-1,0,0],[0,0,0,1,-1,0],[0,0,0,0,1,-1],[-1,0,0,0,0,1]])
-    z = np.array([[2, 2 + 1j, 4],
-            [2 - 1j,  3, 1j],
-            [4, - 1j, 1]])
-    IS_32 = np.array([[1, -1, -1], [0, 1, -1], [0, -1, 1]])
-
     s61 = np.array([[1,0,0,0,0,-1],[0,1,0,0,0,-1],[0,0,1,0,0,-1],[0,0,0,1,0,-1],
                     [0,0,0,0,1,-1],[0,0,0,0,0,0]])
     s62 = np.array([[2,0,0,0,-1,-1],[0,2,0,0,-1,-1],[0,0,2,0,-1,-1],
@@ -474,9 +442,7 @@ if __name__ == '__main__':
         [[2, -1, 0, 0, -1, 0], [0, 1, -1, 0, 0, 0], [-1, 0, 1, 0, 0, 0], [-1, 0, 0, 1, 0, 0], [0, 0, 0, -1, 2, -1],
          [0, 0, 0, 0, -1, 1]], dtype=float)
 
-    # print(a)
-    # print(' is it zero',np.tran spose(cam_ex) @ cam_ex -
-    #       cam_ex @ np.transpose(cam_ex))
+
 
     # determine_polygon(four_cycle, disp=True)
     # determine_polygon(x, disp=True)
@@ -507,6 +473,9 @@ if __name__ == '__main__':
                            [0, 0, 0, 4, -1,-1,-1,-1,0], [0, 0, 0, 0, 4,-1,-1,-1,-1],
                            [-1,0,0,0,0,4,-1,-1,-1],[-1,-1,0,0,0,0,4,-1,-1],[-1,-1,-1,0,0,0,0,4,-1],
                            [-1,-1,-1, -1,0,0,0,0,4]])
+    restricted_nr(reg_torn_9)
+    
+    
     three_balanced_4 = np.array([[2,0,-1,-1],[0,2,-1,-1],[0,0,0,0],
                                  [0,0,0,0]])
     three_balanced_5 = np.array([[1,-1,0,0,0],[-1,2,-1,0,0],[0,-1,1,0,0],
@@ -546,4 +515,4 @@ if __name__ == '__main__':
     # plt_nr(astar)
     # find_poly_graphs(4)
 
-# main()
+main()
