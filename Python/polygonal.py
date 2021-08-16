@@ -267,8 +267,9 @@ def polyGraphs(n,pt):
                 # draw graph
                 g = nx.DiGraph(a)
                 nx.draw_shell(g,with_labels=True,ax=plt.subplot(221))
-                # draw numerical range
+                # draw restricted numerical range
                 plt.subplot(222)
+                plt.title('Restricted Numerical Range')
                 plt.plot(np.real(f),np.imag(f),"b")
                 plt.plot(np.real(e),np.imag(e),"r*")
                 # draw Laplacian
@@ -295,13 +296,15 @@ def polyGraphs(n,pt):
                 # save figure and matrix
                 fig = plt.gcf()
                 if is_singleton(f):
-                    fig.savefig("cameron_figures/singGraphs%d/singGraph%d.png" % (n, poly_count), dpi=400)
+                    fig.savefig("figures/%d_all/singletonGraph%d/singeltonGraph%d.png" % (n, n, poly_count), dpi=400)
                     singleton_adj.append(l)
                 elif is_line(f):
-                    fig.savefig("cameron_figures/lineGraphs%d/lineGraph%d.png" % (n, poly_count), dpi=400)
+                    fig.savefig("figures/%d_all/lineGraph%d/lineGraph%d.png" % (n, n, poly_count), dpi=400)
                     line_adj.append(l)
+                # already determined the graph was polygonal, so if its not a line or singleton
+                # its a polygon
                 else:
-                    fig.savefig("cameron_figures/polyGraphs%d/polyGraph%d.png" % (n, poly_count), dpi=400)
+                    fig.savefig("figures/%d_all/polyGraph%d/polyGraph%d.png" % (n, n, poly_count), dpi=400)
                     poly_adj.append(l)
 
                 # clear plot
@@ -343,6 +346,8 @@ def main(argv):
     pt = int(argv[1])
     polyGraphs(n,pt)
 
+
+    
 
     
 if __name__ == '__main__':

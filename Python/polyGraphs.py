@@ -212,19 +212,20 @@ def restricted_nr(lap):
     nr_unrestricted, e_unrestricted = nr(lap)
 
     # restricted numerical range
-    plt.subplot(121)
-    plt.title('NR(Q)')
+    # plt.subplot(121)
+    # plt.title('NR(Q)')
     plt.plot(np.real(nr_restricted), np.imag(nr_restricted),'#03a5e0', linewidth=2.5)
     plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
              linestyle='None', marker='*', color='#0337e0', markersize = 8)
     plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
+    plt.show()
 
     # unrestricted numerical range
-    plt.subplot(122)
-    plt.title('NR(L)')
-    plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
-    plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
-    plt.show()
+    # plt.subplot(122)
+    # plt.title('NR(L)')
+    # plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
+    # plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
+    # plt.show()
     return nr_restricted, e_restricted
 
 
@@ -289,19 +290,19 @@ def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], 
         exit()
     # in figure nad save figure
     if is_singleton(nr_restricted):
-        fig.savefig("figures/%d_all/d_singletonGraph%d/singletonGraph%d.png" % (n, n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/singletonGraph%d/singletonGraph%d.png" % (n, n, graph_num), dpi=400)
         count_vect[0] += 1
         singleton_adj.append(lap)
     elif is_line(nr_restricted):
-        fig.savefig("figures/%d_all/d_lineGraph%d/lineGraph%d.png" % (n, n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/lineGraph%d/lineGraph%d.png" % (n, n, graph_num), dpi=400)
         count_vect[1] += 1
         line_adj.append(lap)
     elif is_polygon(nr_restricted, eig_restricted):
         count_vect[2] += 1
         poly_adj.append(lap)
-        fig.savefig("figures/%d_all/d_polyGraph%d/polyGraph%d.png" % (n, n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/polyGraph%d/polyGraph%d.png" % (n, n, graph_num), dpi=400)
     else:
-        fig.savefig("figures/%d_all/d_other/graph%d.png" % (n, graph_num), dpi=400)
+        fig.savefig("figures/%d_all/other/graph%d.png" % (n, graph_num), dpi=400)
 
     plt.clf()
     graph_num = graph_num + 1
@@ -410,18 +411,18 @@ def plt_nr(l, restricted = True, save_num = 0):
     # plt.gca().set_aspect('equal', adjustable='box')
 
     # either save or
-    fig = plt.gcf()
-    fig.savefig("nice_poly_nr_figs/polyGraph%d.png" % save_num, dpi=400)
-    plt.clf()
+    # fig = plt.gcf()
+#     fig.savefig("nice_poly_nr_figs/polyGraph%d.png" % save_num, dpi=400)
+#     plt.clf()
 
     # display
-    # plt.show()
+    plt.show()
 
-
+    
 
 
 def main():
-    find_poly_graphs(5)
+    find_poly_graphs(4)
 
 
 if __name__ == '__main__':
@@ -497,9 +498,9 @@ if __name__ == '__main__':
                          [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
     six_star_deg = np.array([[3, 0, -1, 0, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1], [0, 0, 0, 2, -1, -1],
                              [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
-    # plt_nr(complete_2)
-    # plt_nr(com
-    # plete_3)
+    # plt_nr(three_balanced_4)
+    plt_nr(six_cycle)
+    # plt_nr(complete_3)
     # plt_nr(complete_4, restricted=False)
     # plt_nr(complete_4)
     # plt_nr(case_3)
@@ -514,5 +515,28 @@ if __name__ == '__main__':
     # plt_nr(np.transpose(x))
     # plt_nr(astar)
     # find_poly_graphs(4)
+    
+    
+    six_cycle = np.array([[1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0], [0, 0, 1, -1, 0, 0],
+                          [0, 0, 0, 1, -1, 0], [0, 0, 0, 0, 1, -1], [-1, 0, 0, 0, 0, 1]])
+    plt_nr(six_cycle)
+    
+                        ######  #######    #     #####  #     # 
+                        #     # #         # #   #     # #     # 
+                        #     # #        #   #  #       #     # 
+                        ######  #####   #     # #       ####### 
+                        #   #   #       ####### #       #     # 
+                        #    #  #       #     # #     # #     # 
+                        #     # ####### #     #  #####  #     # 
+                        
+    example_1 = []
+    example_2 = []
+    example_3 = []
+    example_4 = []
+                  
+    # plt_nr(example_1)
+    # plt_nr(example_2)
+    # plt_nr(example_3)
+    # plt_nr(example_4)                     
 
-main()
+# main()
