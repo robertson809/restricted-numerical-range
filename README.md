@@ -1,5 +1,6 @@
 # Restricted Numerical Range
 by Michael Robertson
+
 Senior Thesis on the interplay of the Graph Laplacian and Numerical Range. 
 
 ### Publication
@@ -15,6 +16,3 @@ the necessary dependencies and run find_polygonal.
 The program will afterwards continue to search for all polygonal graphs with four vertices, and report its findings after every ten digraphs examined. 
 
 All code was jointly authored by Michael Robertson and his thesis Advisor, [Thomas R. Cameron](https://www.thomasrcameron.com/).
-
-
-
