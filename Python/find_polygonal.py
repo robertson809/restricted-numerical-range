@@ -200,7 +200,7 @@ def is_polygon(f, e):
     return res
 
 
-def restricted_nr(lap):
+def restricted_nr(lap, title=None, disp= False):
     """
     Plots both the restricted and unrestricted numerical ranges
     @param lap: lapalcian matrix
@@ -209,15 +209,18 @@ def restricted_nr(lap):
     """
     nr_restricted, e_restricted = qnr(lap)
     nr_unrestricted, e_unrestricted = nr(lap)
+    
+    # display options
 
     # restricted numerical range
-    # plt.subplot(121)
-    # plt.title('NR(Q)')
-    plt.plot(np.real(nr_restricted), np.imag(nr_restricted),'#03a5e0', linewidth=2.5)
-    plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
-             linestyle='None', marker='*', color='#0337e0', markersize = 8)
-    plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
-    plt.show()
+    if disp:
+        # plt.subplot(121)
+        plt.title(title)
+        plt.plot(np.real(nr_restricted), np.imag(nr_restricted),'#03a5e0', linewidth=2.5)
+        plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
+                 linestyle='None', marker='*', color='#0337e0', markersize = 8)
+        plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
+        plt.show()
 
     # unrestricted numerical range
     # plt.subplot(122)
@@ -253,7 +256,7 @@ def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], 
     # form Laplacian
     diag = np.array([np.sum(adj[i, :]) for i in range(n)])
     lap = np.diag(diag) - adj
-    if not disp:
+    if disp:
         print(lap)
         print(graph_num)
 
@@ -304,7 +307,7 @@ def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], 
         fig.savefig("figures/%d_all/other/graph%d.png" % (n, graph_num), dpi=400)
 
     plt.clf()
-    graph_num = graph_num + 1
+    graph_num += 1
 
 
 def write_out(adjs, n):
@@ -340,7 +343,6 @@ def find_poly_graphs(n, pt=-1):
         infile = open('matrices/directed_adjacency_mats/adj' + str(n) + '_pt' + str(pt) + '.txt')
     else:
         infile = open('matrices/directed_adjacency_mats/adj' + str(n) + '.txt')
-    # infile = open('matrices/directed_adjacency_mats/4complete.txt')
 
 
     line_list = infile.readlines()
@@ -351,15 +353,20 @@ def find_poly_graphs(n, pt=-1):
     line_adj = []
     poly_adj = []
     # print(line_list)
+    
+    
+        
     for row in line_list:
-        if graph_num % 1000 == 0:
-            print('Examined graph {}.{}'.format(pt, graph_num))
-            print('We have {} singletons, {} lines, and {} polygons'.format(count_vect[0], count_vect[1],
-                                                                            count_vect[2]))
-            print('Total time elapsed ---- %.1f hours' % ((time.time() - start_time) / 3600))
         row = row.split(" ")
         if len(row) < n:  # we've read a full adjacency matrix
-            print(a)
+            # print(a)
+            
+            if graph_num % 10 == 0:
+                print('Examined graph {}'.format(graph_num))
+                print('We have {} singletons, {} lines, and {} polygons'.format(count_vect[0], count_vect[1],
+                                                                                count_vect[2]))
+                print('Total time elapsed ---- %.1f hours' % ((time.time() - start_time) / 3600))
+                
             determine_polygon(a, count_vect, singleton_adj, line_adj, poly_adj, pt)
             a = np.zeros((n, n))  # reset adjacency matrix
             mat_line_count = 0  # reset line count
@@ -406,14 +413,14 @@ def plt_nr(l, restricted = True, save_num = 0):
     plt.title('Adrian\'s Restricted Numerical Range')
     plt.fill(np.real(f), np.imag(f), '#03a5e0')# fill
 
-    # plt.xlim(-1, 4)
-    # plt.ylim(-2, 2)
-    # plt.gca().set_aspect('equal', adjustable='box')
 
-    # either save or
+
+    # two optoins
+    
+    # save to file
     # fig = plt.gcf()
-#     fig.savefig("nice_poly_nr_figs/polyGraph%d.png" % save_num, dpi=400)
-#     plt.clf()
+    # fig.savefig("nice_poly_nr_figs/polyGraph%d.png" % save_num, dpi=400)
+    # plt.clf()
 
     # display
     plt.show()
@@ -426,29 +433,8 @@ def main():
 
 
 if __name__ == '__main__':
-    s61 = np.array([[1,0,0,0,0,-1],[0,1,0,0,0,-1],[0,0,1,0,0,-1],[0,0,0,1,0,-1],
-                    [0,0,0,0,1,-1],[0,0,0,0,0,0]])
-    s62 = np.array([[2,0,0,0,-1,-1],[0,2,0,0,-1,-1],[0,0,2,0,-1,-1],
-                    [0,0,0,2,-1,-1],[0,0,0,0,1,-1],[0,0,0,0,-1,1]])
-    six_star = np.array([[0,0,0,1,1,1],[0,0,0,1,1,1],[0,0,0,1,1,1],[0,0,0,0,1,1],
-                         [0,0,0,1,0,1],[0,0,0,1,1,0]])
-    six_star_deg = np.array([[0,0,1,0,1,1],[0,0,0,1,1,1],[0,0,0,1,1,1],[0,0,0,0,1,1],
-                         [0,0,0,1,0,1],[0,0,0,1,1,0]])
-    cam_ex = np.array([[0,1,0,1],[0,0,1,1],[1,0,0,1],[0,0,0,0]])
-    empty = np.array([[1,0,0,0],[0,1,0,0],[0,0,1,0],[0,0,0,1]])
-    complete = np.array([[0,1,1,1],[1,0,1,1],[1,1,0,1],[1,1,1,0]])
-    four_cycle = np.array([[0,1,0,0],[0,0,1,0],[0,0,0,1],[1,0,0,0]])
-    reg_torn = np.array([[0,1,1,0,0],[0,0,1,1,0],[0,0,0,1,1],[1,0,0,0,1],[1,1,0,0,0]])
-    cam_ex = np.array(
-        [[2, -1, 0, 0, -1, 0], [0, 1, -1, 0, 0, 0], [-1, 0, 1, 0, 0, 0], [-1, 0, 0, 1, 0, 0], [0, 0, 0, -1, 2, -1],
-         [0, 0, 0, 0, -1, 1]], dtype=float)
 
-
-
-    # determine_polygon(four_cycle, disp=True)
-    # determine_polygon(x, disp=True)
-    # determine_polygon(reg_torn, disp=True)
-
+    # experiments
     empty_4 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
     complete_2 = np.array([[1,-1],[-1,1]])
     complete_3 = np.array([[2,-1,-1],[-1,2,-1],[-1,-1,2]])
@@ -474,114 +460,22 @@ if __name__ == '__main__':
                            [0, 0, 0, 4, -1,-1,-1,-1,0], [0, 0, 0, 0, 4,-1,-1,-1,-1],
                            [-1,0,0,0,0,4,-1,-1,-1],[-1,-1,0,0,0,0,4,-1,-1],[-1,-1,-1,0,0,0,0,4,-1],
                            [-1,-1,-1, -1,0,0,0,0,4]])
-    restricted_nr(reg_torn_9)
+
+    
+    # show the regular tournaments with 5, 7, and 9 participants
+    
+    print("The restricted numerical range of a digraph will be a vertical line if and only iff it is a regular tournament")
+    print("Observe the restricted numerical ranges on 5, 7, and 9 nodes")
+    
+    tourn_str = 'Restricted Numerical Range of the Regular Tournament on'
+    restricted_nr(reg_torn_5, tourn_str + ' 5 vertices', disp = True)
+    restricted_nr(reg_torn_7, tourn_str + ' 7 vertices', disp =True)
+    restricted_nr(reg_torn_9, tourn_str + ' 9 vertices', disp = True)
+    plt.close('all')
+    plt.clf
+    time.sleep(2)
     
     
-    three_balanced_4 = np.array([[2,0,-1,-1],[0,2,-1,-1],[0,0,0,0],
-                                 [0,0,0,0]])
-    three_balanced_5 = np.array([[1,-1,0,0,0],[-1,2,-1,0,0],[0,-1,1,0,0],
-                                 [-1,-1,-1,3,0],[-1,-1,-1,0,3]])
+    print('Demonstration concluded, now searching for all polygonal numerical ranges on graphs with 4 vertices')
 
-    case_1 = np.array([[2,0,0,-1,0,-1],[0,1,0,0,0,-1],[0,0,1,0,0,-1],[0,0,0,2,-1,-1],
-                      [-1,0,0,0,2,-1],[-1,-1,-1,-1,-1,5]])
-    case_2 = np.array([[1,0,0,-1,0,0],[0,0,0,0,0,0],[0,0,0,0,0,0],[0,0,0,1,-1,0],
-                       [-1,0,0,0,1,0],[-1,-1,-1,-1,-1,5]])
-
-    case_3 = np.array([[2,0,-1,-1,0,0],[0,2,-1,-1,0,0],[-1,-1,4,-1,-1,0],
-                       [-1,-1,-1,4,0,-1],[-1,-1,0,-1,4,-1],[-1,-1,-1,0,-1,4]])
-
-    case_3_comp = np.array([[3, -1, 0, 0, -1, -1], [-1, 3, 0, 0, -1, -1], [0, 0, 1, 0, 0, -1],
-                       [0, 0, 0, 1, -1, 0], [0, 0, -1, 0, 1, 0], [0, 0, 0, -1, 0, 1]])
-
-
-    six_star = np.array([[3, 0, 0, -1, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1], [0, 0, 0, 2, -1, -1],
-                         [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
-    six_star_deg = np.array([[3, 0, -1, 0, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1], [0, 0, 0, 2, -1, -1],
-                             [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
-    # plt_nr(three_balanced_4)
-    # plt_nr(six_cycle)
-    # plt_nr(complete_3)
-    # plt_nr(complete_4, restricted=False)
-    # plt_nr(complete_4)
-    # plt_nr(case_3)
-    # plt_nr(case_3_comp)
-    # plt_nr(six_star, restricted=False)
-    # plt_nr(six_star_deg, restricted=False)
-    # plt.show()
-    # plt_nr(case_2)
-    # plt_nr(case_3)
-
-
-    # plt_nr(np.transpose(x))
-    # plt_nr(astar)
-    # find_poly_graphs(4)
-    
-    
-    six_cycle = np.array([[1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0], [0, 0, 1, -1, 0, 0],
-                          [0, 0, 0, 1, -1, 0], [0, 0, 0, 0, 1, -1], [-1, 0, 0, 0, 0, 1]])
-    # plt_nr(six_cycle)
-    
-                        ######  #######    #     #####  #     # 
-                        #     # #         # #   #     # #     # 
-                        #     # #        #   #  #       #     # 
-                        ######  #####   #     # #       ####### 
-                        #   #   #       ####### #       #     # 
-                        #    #  #       #     # #     # #     # 
-                        #     # ####### #     #  #####  #     # 
-                        
-    arsi = np.array([
-        [2,0,-1,-1,0,0],
-        [-1,4,0,-1,-1,-1],
-        [-1,-1,3,0,-1,0],
-        [-1,-1,-1,4,0,-1],
-        [0,-1,-1,0,3,-1],
-        [0,-1,0,0,-1,2],
-    ])
-    dj = np.array([
-        [2, -1, 0, -1],
-        [0, 0, 0, 0],
-        [-1, -1, 3, -1],
-        [-1, -1, -1, 3]
-    ])
-    joshua = np.array([
-        [3, -1, 0, -1, -1],
-        [-1, 2, 0, -1, 0],
-        [-1, -1, 4, -1, -1],
-        [-1, -1, -1, 3, 0],
-        [0, -1, -1, -1, 3]])
-    christian = np.array([[1,0,-1,0,0],
-    [0,2,-1,-1,0],
-    [0,-1,3,-1,-1],
-    [0,0,-1,1,0],
-    [-1,0,-1,0,2]])
-    lucas = np.array([
-        [2, 0, 0, -1, 0, 0, -1],
-    [0, 2, -1, 0, 0, 0, -1],
-    [-1, -1, 4, -1, 0, -1, 0],
-    [-1, -1, 0, 3, -1, 0, 0],
-    [0, 0, -1, -1, 2, 0, 0],
-    [0, 0, 0, 0, 0, -1, -1],
-    [0, 0, 0, -1, 0, -1, 2]])
-
-    adrian = np.array([
-    [2,-1,-1,0,0],
-    [-1,1,0,0,0],
-    [0,-1,2,-1,0],
-    [-1,-1,-1,4,-1],
-    [-1,-1,-1,-1,4]])
-    
-
-    print('plotting DJ')
-    plt_nr(dj)
-    print('plotting arsi')      
-    plt_nr(arsi)
-    print('plotting joshua')
-    plt_nr(joshua)
-    print('plotting christian')
-    plt_nr(christian)
-    print('plotting lucas')
-    plt_nr(lucas)
-    print('plotting adrian')
-    plt_nr(adrian)
-
-# main()
+    main()
