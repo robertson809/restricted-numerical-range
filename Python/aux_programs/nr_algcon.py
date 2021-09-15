@@ -1,6 +1,6 @@
 # NR_AlgCon: Numerical Range and Algebraic Connectivity
 #
-# Author: Thomas R. Cameron
+# Author: Thomas R. Cameron and Michael Robertson
 # Date: 6/1/2019
 import numpy as np
 from matplotlib import patches as mpatches

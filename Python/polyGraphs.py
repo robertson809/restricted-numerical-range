@@ -1,6 +1,6 @@
 # Polygonal Graphs
 #
-# This module determines graphs with polygonal numerical range
+# This module finds graphs with polygonal numerical range
 #
 # Author: Michael D. Robertson and Thomas R. Cameron
 # Date: 3/16/2020
@@ -19,7 +19,6 @@ EPS = np.finfo(float).eps
 graph_num = 1
 title = ""
 verbose = False
-
 
 
 
@@ -404,6 +403,7 @@ def plt_nr(l, restricted = True, save_num = 0):
     # plt.plot(np.real(f), np.imag(f), '#03a5e0', linewidth=2.5)  # boundary
     plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize=8)
     plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize = 8)  # evals
+    plt.title('Adrian\'s Restricted Numerical Range')
     plt.fill(np.real(f), np.imag(f), '#03a5e0')# fill
 
     # plt.xlim(-1, 4)
@@ -499,7 +499,7 @@ if __name__ == '__main__':
     six_star_deg = np.array([[3, 0, -1, 0, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1], [0, 0, 0, 2, -1, -1],
                              [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
     # plt_nr(three_balanced_4)
-    plt_nr(six_cycle)
+    # plt_nr(six_cycle)
     # plt_nr(complete_3)
     # plt_nr(complete_4, restricted=False)
     # plt_nr(complete_4)
@@ -519,7 +519,7 @@ if __name__ == '__main__':
     
     six_cycle = np.array([[1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0], [0, 0, 1, -1, 0, 0],
                           [0, 0, 0, 1, -1, 0], [0, 0, 0, 0, 1, -1], [-1, 0, 0, 0, 0, 1]])
-    plt_nr(six_cycle)
+    # plt_nr(six_cycle)
     
                         ######  #######    #     #####  #     # 
                         #     # #         # #   #     # #     # 
@@ -529,14 +529,59 @@ if __name__ == '__main__':
                         #    #  #       #     # #     # #     # 
                         #     # ####### #     #  #####  #     # 
                         
-    example_1 = []
-    example_2 = []
-    example_3 = []
-    example_4 = []
-                  
-    # plt_nr(example_1)
-    # plt_nr(example_2)
-    # plt_nr(example_3)
-    # plt_nr(example_4)                     
+    arsi = np.array([
+        [2,0,-1,-1,0,0],
+        [-1,4,0,-1,-1,-1],
+        [-1,-1,3,0,-1,0],
+        [-1,-1,-1,4,0,-1],
+        [0,-1,-1,0,3,-1],
+        [0,-1,0,0,-1,2],
+    ])
+    dj = np.array([
+        [2, -1, 0, -1],
+        [0, 0, 0, 0],
+        [-1, -1, 3, -1],
+        [-1, -1, -1, 3]
+    ])
+    joshua = np.array([
+        [3, -1, 0, -1, -1],
+        [-1, 2, 0, -1, 0],
+        [-1, -1, 4, -1, -1],
+        [-1, -1, -1, 3, 0],
+        [0, -1, -1, -1, 3]])
+    christian = np.array([[1,0,-1,0,0],
+    [0,2,-1,-1,0],
+    [0,-1,3,-1,-1],
+    [0,0,-1,1,0],
+    [-1,0,-1,0,2]])
+    lucas = np.array([
+        [2, 0, 0, -1, 0, 0, -1],
+    [0, 2, -1, 0, 0, 0, -1],
+    [-1, -1, 4, -1, 0, -1, 0],
+    [-1, -1, 0, 3, -1, 0, 0],
+    [0, 0, -1, -1, 2, 0, 0],
+    [0, 0, 0, 0, 0, -1, -1],
+    [0, 0, 0, -1, 0, -1, 2]])
+
+    adrian = np.array([
+    [2,-1,-1,0,0],
+    [-1,1,0,0,0],
+    [0,-1,2,-1,0],
+    [-1,-1,-1,4,-1],
+    [-1,-1,-1,-1,4]])
+    
+
+    print('plotting DJ')
+    plt_nr(dj)
+    print('plotting arsi')      
+    plt_nr(arsi)
+    print('plotting joshua')
+    plt_nr(joshua)
+    print('plotting christian')
+    plt_nr(christian)
+    print('plotting lucas')
+    plt_nr(lucas)
+    print('plotting adrian')
+    plt_nr(adrian)
 
 # main()

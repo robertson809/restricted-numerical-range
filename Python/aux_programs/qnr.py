@@ -1,6 +1,6 @@
 # NR: Numerical Range Plot
 #
-# Author: Thomas R. Cameron
+# Author: Thomas R. Cameron and Michael Robertson
 # Date: 5/30/2019
 import numpy as np
 from matplotlib import pyplot as plt
@@ -9,8 +9,7 @@ import itertools
 from math import pi as pi
 import sys
 from operator import itemgetter
-##Global variables are realllly bad practice but otherwise
-##I'd have to pass things all over the place
+# Global variables are bad practice but otherwise I'd have to pass things all over the place
 singleton_index_list = []
 ###############################################
 ###             Numerical Range             ###
@@ -191,13 +190,13 @@ test_graph = np.array([[1,-1,0,0,0],
               [-1,0,1,0,0],
               [0,0,0,1,-1],
               [0,0,0,-1,1]])
+              
+              
 #qnr(test_graph, 1)
 #k = test_graph.transpose() @ test_graph - test_graph @ test_graph.transpose()
-#print(k, np.linalg.norm(k, 'fro'))
 print('the singletons are at', singleton_index_list)
 
-#shouldn't be possible that graph
-# 3 on 3 vertices has normal laplacian but not normal 1
+
 
 
 
