@@ -18,7 +18,7 @@ warnings.filterwarnings("ignore", category=UserWarning)
 EPS = np.finfo(float).eps
 graph_num = 1
 title = ""
-verbose = False
+
 
 
 
@@ -148,15 +148,6 @@ def qnr(lap):
     # restrict lap to form a
     a = np.dot(np.transpose(q), np.dot(lap, q))
 
-
-    # plot Q matrix, we decided not to do this
-    # plt.subplot(224)
-    # plt.matshow(a, fignum=False, cmap='winter')
-    # for i in range(n):
-    #     for j in range(n):
-    #         c = lap[j, i]
-    #         plt.text(i, j, str(c), va='center', ha='center', color='white')
-
     global title
     if abs(np.linalg.norm(a.transpose() @ a - a @ a.transpose(), 'fro')) <= np.linalg.norm(a, 'fro') * \
             sys.float_info.epsilon * 100:
@@ -228,6 +219,7 @@ def restricted_nr(lap, title=None, disp= False):
     # plt.plot(np.real(nr_unrestricted), np.imag(nr_unrestricted))
     # plt.plot(np.real(e_unrestricted), np.imag(e_unrestricted), 'g*')
     # plt.show()
+    
     return nr_restricted, e_restricted
 
 
@@ -250,8 +242,6 @@ def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], 
     g = nx.DiGraph(adj)
     n = len(adj)
 
-    # include graph in figure
-    # nx.draw_shell(g, with_labels=True, ax=plt.subplot(221))
 
     # form Laplacian
     diag = np.array([np.sum(adj[i, :]) for i in range(n)])
@@ -260,28 +250,13 @@ def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], 
         print(lap)
         print(graph_num)
 
-    # test for normality
-    # if np.linalg.norm(lap.transpose() @ lap - lap @ lap.transpose(), 'fro') == 0:  # normality test
-    #     title = title + ' N_L '
-    # plt.subplot(221)
-
     # include graph number in figure
     if pt != -1:
         plt.title(title + "Graph Number %d.%d" % (pt, graph_num))
     if disp:
         print('could include a title in line 267')
         # plt.title()
-    # else:
-    #     plt.title(title + "Graph Number %d" % graph_num)
 
-    # plt.subplot(222)
-
-    # include Laplacian in figure
-    # plt.matshow(lap, fignum=False, cmap='winter')
-    # for k in range(n):
-    #     for j in range(n):
-    #         c = lap[j, k]
-            # plt.text(k, j, str(c), va='center', ha='center', color='white')
 
     # find unrestricted numerical ranges and include both restricted and unrestricted in figure
     nr_restricted, eig_restricted = restricted_nr(lap)
@@ -352,7 +327,7 @@ def find_poly_graphs(n, pt=-1):
     singleton_adj = []
     line_adj = []
     poly_adj = []
-    # print(line_list)
+
     
     
         
@@ -391,38 +366,12 @@ def plt_nr(l, restricted = True, save_num = 0):
     else:
         f, e = nr(l)
 
-    # color options
-    # print('the eigen values are', e)
-    # close blue #0337e0
-    # 03a5e0 - 'calming blue
-    # outside green - #8da63a
-    # 03e0ad
-    # contrast orange - #e03e03
-    # ac1a2f davidson wildcat red
-    # plt.plot(np.real(f), np.imag(f),'#03a5e0', linewidth = 2.5) #boundary
-    # plt.plot(np.real(e), np.imag(e), linestyle = 'None', marker =  '*',
-    #          color = '#0337e0', markersize=8) #evals
-    # plt.fill(np.real(f), np.imag(f), '#03a5e0') #fill
-    #
-    # plt.show()
-    # print(a)
 
-    # plt.plot(np.real(f), np.imag(f), '#03a5e0', linewidth=2.5)  # boundary
     plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize=8)
     plt.plot(np.real(e), np.imag(e), linestyle='None', marker='*', color='#0337e0', markersize = 8)  # evals
     plt.title('Adrian\'s Restricted Numerical Range')
     plt.fill(np.real(f), np.imag(f), '#03a5e0')# fill
 
-
-
-    # two optoins
-    
-    # save to file
-    # fig = plt.gcf()
-    # fig.savefig("nice_poly_nr_figs/polyGraph%d.png" % save_num, dpi=400)
-    # plt.clf()
-
-    # display
     plt.show()
 
     
@@ -434,22 +383,6 @@ def main():
 
 if __name__ == '__main__':
 
-    # experiments
-    empty_4 = np.array([[0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0], [0, 0, 0, 0]])
-    complete_2 = np.array([[1,-1],[-1,1]])
-    complete_3 = np.array([[2,-1,-1],[-1,2,-1],[-1,-1,2]])
-    complete_4 = np.array([[3,-1, -1, -1], [-1, 3,-1, -1], [-1, -1, 3,-1],[-1,-1,-1,3]])
-    four_cycle = np.array([[1, -1, 0, 0], [0, 1, -1, 0], [0, 0, 1, -1], [-1, 0, 0, 1]])
-    five_cycle = np.array([[1, -1, 0, 0, 0], [0, 1, -1, 0, 0], [0, 0, 1, -1, 0],
-                          [0, 0, 0, 1, -1], [-1, 0, 0, 0, 1]])
-    six_cycle = np.array([[1, -1, 0, 0, 0, 0], [0, 1, -1, 0, 0, 0], [0, 0, 1, -1, 0, 0],
-                          [0, 0, 0, 1, -1, 0], [0, 0, 0, 0, 1, -1], [-1, 0, 0, 0, 0, 1]])
-    s61 = np.array([[1, 0, 0, 0, 0, -1], [0, 1, 0, 0, 0, -1], [0, 0, 1, 0, 0, -1], [0, 0, 0, 1, 0, -1],
-                    [0, 0, 0, 0, 1, -1], [0, 0, 0, 0, 0, 0]])
-    s62 = np.array([[2, 0, 0, 0, -1, -1], [0, 2, 0, 0, -1, -1], [0, 0, 2, 0, -1, -1],
-                    [0, 0, 0, 2, -1, -1], [0, 0, 0, 0, 1, -1], [0, 0, 0, 0, -1, 1]])
-    s63 = np.array([[3, 0, 0, -1, -1, -1], [0, 3, 0, -1, -1, -1], [0, 0, 3, -1, -1, -1],
-                    [0, 0, 0, 2, -1, -1], [0, 0, 0, -1, 2, -1], [0, 0, 0, -1, -1, 2]])
     reg_torn_5 = np.array([[2, -1, -1, 0, 0], [0, 2, -1, -1, 0], [0, 0, 2, -1, -1],
                          [-1, 0, 0, 2, -1], [-1, -1, 0, 0, 2]])
     reg_torn_7 = np.array([[3, -1, -1, -1, 0,0,0], [0, 3, -1, -1, -1,0,0], [0, 0, 3, -1, -1,-1,0],
@@ -471,11 +404,8 @@ if __name__ == '__main__':
     restricted_nr(reg_torn_5, tourn_str + ' 5 vertices', disp = True)
     restricted_nr(reg_torn_7, tourn_str + ' 7 vertices', disp =True)
     restricted_nr(reg_torn_9, tourn_str + ' 9 vertices', disp = True)
-    plt.close('all')
-    plt.clf
-    time.sleep(2)
+
     
     
     print('Demonstration concluded, now searching for all polygonal numerical ranges on graphs with 4 vertices')
-
     main()
