@@ -259,9 +259,9 @@ def determine_polygon(adj, count_vect=[0, 0, 0], singleton_adj=[], line_adj=[], 
 
 
     # find unrestricted numerical ranges and include both restricted and unrestricted in figure
-    nr_restricted, eig_restricted = restricted_nr(lap)
+    nr_restricted, eig_restricted = restricted_nr(lap, disp = True)
     fig = plt.gcf()
-
+    
     if disp:
         plt.show()
         exit()
@@ -293,8 +293,8 @@ def write_out(adjs, n):
     """
     names = ['singleton', 'line', 'polygon']
     for name, mat in zip(names, adjs):
-        # outfile = open('matrices/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
-        outfile = open('defense_figs/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
+        outfile = open('matrices/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
+        # outfile = open('defense_figs/polygon_adjs/{}/{}_adjs.txt'.format(n, name), 'w+')
         for g in mat:
             for i in range(n):
                 for j in range(n - 1):
