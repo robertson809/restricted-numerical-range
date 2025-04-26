@@ -4,7 +4,7 @@ import networkx as nx
 from matplotlib import pyplot as plt
 import numpy as np
 
-def panel_display(l, name):
+def panel_display(l, name, color='#03a5e0'):
     # restricted numerical range
     f, e = qnr(l)
     # check if graph is polygonal
@@ -17,8 +17,10 @@ def panel_display(l, name):
     # draw restricted numerical range
     plt.subplot(222)
     plt.title('Restricted Numerical Range')
-    plt.plot(np.real(f),np.imag(f),"b")
-    plt.plot(np.real(e),np.imag(e),"r*")
+    plt.plot(np.real(f),np.imag(f),"g")
+    plt.axis('equal')
+    plt.plot(np.real(e),np.imag(e),"b*")
+    plt.fill(np.real(f), np.imag(f), color)  # fill, barbie pink is #e0216e, blue I used is #03a5e0
     # draw Laplacian
     plt.subplot(223)
     plt.axis("off")
@@ -63,6 +65,7 @@ def restricted_nr(lap, title=None, name = ""):
     plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
                 linestyle='None', marker='*', color='#0337e0', markersize = 8)
     plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
+    plt.axis('equal')
     fig = plt.gcf()
     plt.show()
     fig.savefig(f"demo_figures/{name}_rnr", dpi=400)
