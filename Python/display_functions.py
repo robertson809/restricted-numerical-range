@@ -50,7 +50,7 @@ def panel_display(l, name, color='#03a5e0'):
     plt.clf()
 
 
-def restricted_nr(lap, title=None, name = ""):
+def restricted_nr(lap, title=None, name = "", color='#03a5e0'):
     """
     Plots both the restricted and unrestricted numerical ranges
     @param lap: lapalcian matrix
@@ -64,7 +64,7 @@ def restricted_nr(lap, title=None, name = ""):
     plt.plot(np.real(nr_restricted), np.imag(nr_restricted),'#03a5e0', linewidth=2.5)
     plt.plot(np.real(e_restricted), np.imag(e_restricted), '*',
                 linestyle='None', marker='*', color='#0337e0', markersize = 8)
-    plt.fill(np.real(nr_restricted), np.imag(nr_restricted), '#03a5e0')  # fill
+    plt.fill(np.real(nr_restricted), np.imag(nr_restricted), color)  # fill
     plt.axis('equal')
     fig = plt.gcf()
     plt.show()
